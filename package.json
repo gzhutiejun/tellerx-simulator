@@ -1,7 +1,7 @@
 {
   "name": "tellerx-simulator",
   "version": "1.0.0",
-  "description": "TellerX JSON-RPC Server Simulator for testing",
+  "description": "TellerX JSON-RPC Server Simulator",
   "main": "src/server.js",
   "type": "module",
   "scripts": {
