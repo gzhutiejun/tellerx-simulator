@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TellerX Simulator - Control Panel</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #e9ecef;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        max-width: 1600px;
+        width: 100%;
+        margin: 20px auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        background: #2c3e50;
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        opacity: 0.9;
+        font-size: 1.1em;
+      }
+
+      .status-bar {
+        display: flex;
+        justify-content: space-around;
+        padding: 20px;
+        background: #f8f9fa;
+        border-bottom: 2px solid #e9ecef;
+      }
+
+      .status-item {
+        text-align: center;
+      }
+
+      .status-label {
+        font-size: 0.9em;
+        color: #6c757d;
+        margin-bottom: 5px;
+      }
+
+      .status-value {
+        font-size: 1.5em;
+        font-weight: bold;
+      }
+
+      .status-value.connected {
+        color: #28a745;
+      }
+
+      .status-value.disconnected {
+        color: #dc3545;
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        padding: 20px;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      .panel {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .panel-header {
+        font-size: 1.3em;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #495057;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .clear-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8em;
+      }
+
+      .clear-btn:hover {
+        background: #c82333;
+      }
+
+      .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        background: white;
+        border-radius: 6px;
+        padding: 15px;
+        border: 1px solid #dee2e6;
+      }
+
+      .message {
+        margin-bottom: 15px;
+        padding: 12px;
+        border-radius: 6px;
+        border-left: 4px solid;
+        font-family: "Courier New", monospace;
+        font-size: 0.9em;
+      }
+
+      .message.incoming {
+        background: #e3f2fd;
+        border-left-color: #2196f3;
+      }
+
+      .message.outgoing {
+        background: #f3e5f5;
+        border-left-color: #9c27b0;
+      }
+
+      .message-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+
+      .message-direction {
+        color: #495057;
+      }
+
+      .message-time {
+        color: #6c757d;
+        font-size: 0.85em;
+      }
+
+      .message-content {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 10px;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        word-break: break-all;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      .controls-container {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Tab Navigation */
+      .tab-nav {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #dee2e6;
+        flex-wrap: wrap;
+        flex-shrink: 0;
+      }
+
+      .tab-button {
+        padding: 10px 15px;
+        background: transparent;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        font-size: 0.9em;
+        color: #6c757d;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+
+      .tab-button:hover {
+        color: #007bff;
+        background: #f8f9fa;
+      }
+
+      .tab-button.active {
+        color: #007bff;
+        border-bottom-color: #007bff;
+        font-weight: bold;
+      }
+
+      /* Tab Content */
+      .tab-content {
+        display: none;
+        flex: 1;
+        overflow-y: auto;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .control-group {
+        background: white;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid #dee2e6;
+      }
+
+      .control-group-title {
+        font-weight: bold;
+        color: #495057;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 5px;
+      }
+
+      .control-item {
+        margin-bottom: 15px;
+      }
+
+      .control-label {
+        display: block;
+        margin-bottom: 5px;
+        color: #495057;
+        font-weight: 500;
+      }
+
+      .control-input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9em;
+      }
+
+      .control-input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+      }
+
+      .control-button {
+        width: 100%;
+        padding: 10px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1em;
+        transition: background-color 0.2s;
+      }
+
+      .control-button:hover {
+        background: #0056b3;
+      }
+
+      .control-button:active {
+        background: #004085;
+      }
+
+      .control-button:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+      }
+
+      textarea.control-input {
+        min-height: 80px;
+        resize: vertical;
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      @media (max-width: 1200px) {
+        .main-content {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎮 TellerX Simulator Control Panel</h1>
+        <p>Real-time monitoring and manual notification triggers</p>
+      </div>
+
+      <div class="status-bar">
+        <div class="status-item">
+          <div class="status-label">Connection Status</div>
+          <div class="status-value disconnected" id="connectionStatus">Disconnected</div>
+        </div>
+        <div class="status-item">
+          <div class="status-label">Connected Clients</div>
+          <div class="status-value" id="clientCount">0</div>
+        </div>
+        <div class="status-item">
+          <div class="status-label">Messages Received</div>
+          <div class="status-value" style="color: #2196f3" id="incomingCount">0</div>
+        </div>
+        <div class="status-item">
+          <div class="status-label">Messages Sent</div>
+          <div class="status-value" style="color: #9c27b0" id="outgoingCount">0</div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <!-- Messages Panel -->
+        <div class="panel">
+          <div class="panel-header">
+            📨 Message Log
+            <button class="clear-btn" onclick="clearMessages()">Clear</button>
+          </div>
+          <div class="messages-container" id="messagesContainer"></div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="panel">
+          <div class="panel-header">🎛️ Manual Notification Triggers</div>
+          <div class="controls-container" id="controlsContainer"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

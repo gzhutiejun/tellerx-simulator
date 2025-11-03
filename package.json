@@ -1,0 +1,26 @@
+{
+  "name": "tellerx-simulator",
+  "version": "1.0.0",
+  "description": "TellerX JSON-RPC Server Simulator for testing",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node test-client.js"
+  },
+  "keywords": [
+    "tellerx",
+    "simulator",
+    "json-rpc",
+    "websocket"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2",
+    "cors": "^2.8.5",
+    "uuid": "^9.0.1"
+  }
+}
